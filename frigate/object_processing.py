@@ -133,6 +133,8 @@ class TrackedObjectProcessor(threading.Thread):
                     if ret:
                         jpg_bytes = jpg.tobytes()
                         self.client.publish(f"{self.topic_prefix}/{camera}/{obj_name}/snapshot", jpg_bytes, retain=True)
+                        self.client.publish(f"{self.topic_prefix}/{camera}/{obj_name}/region", "{},{},{},{}".format(region[0],region[1],region[2],region[3]), retain=False)
+                        self.client.publish(f"{self.topic_prefix}/{camera}/{obj_name}/box", "{},{},{},{}".format(box[0],box[1],box[2],box[3]), retain=False)
 
             # expire any objects that are ON and no longer detected
             expired_objects = [obj_name for obj_name, status in current_object_status.items() if status == 'ON' and not obj_name in obj_counter]
@@ -145,3 +147,5 @@ class TrackedObjectProcessor(threading.Thread):
                 if ret:
                     jpg_bytes = jpg.tobytes()
                     self.client.publish(f"{self.topic_prefix}/{camera}/{obj_name}/snapshot", jpg_bytes, retain=True)
+                    self.client.publish(f"{self.topic_prefix}/{camera}/{obj_name}/region", "{},{},{},{}".format(region[0],region[1],region[2],region[3]), retain=False)
+                    self.client.publish(f"{self.topic_prefix}/{camera}/{obj_name}/box", "{},{},{},{}".format(box[0],box[1],box[2],box[3]), retain=False)
